@@ -12,17 +12,28 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-
+  box-shadow: inset 0px -10vh 30vh 0px rgba(0,0,0,0.1);
   font-size: 2.5em;
 }
 
-h1, h2, h3, h4, h5, h6,
-p, small, strong, em {
+h1, h2, h3, h4, h5, h6 {
+  font-family: serif;
+  margin-bottom: .5em;
+}
+
+p, small, strong, em, li {
+  font-family: sans-serif;
+  line-height: 2em;
   text-align: center;
 }
 
-ul > li {
+li {
   text-align: left;
+}
+
+code {
+  font-family: monospace;
+  white-space: pre;
 }
 
 article {
@@ -32,10 +43,24 @@ article {
   align-items: center;
 }
 
+article.pros-cons {
+  flex-direction: row;
+}
+article.pros-cons ul {
+  max-width: 30%;
+  margin: 0 5%;
+}
+
+article.highlight {
+  background: linear-gradient(135deg, #5f00a8 35%, #ed005f 100%);
+  background-color: #5f00a8;
+  text-transform: uppercase;
+  color: white;
+}
+
 article > * {
   display: block;
   max-width: 960px;
-  transform: translateY(-15vh);
 }
 
 /* Transitions */
@@ -44,14 +69,14 @@ article {
   transform: translateX(100%);
 }
 
-article[active] {
+article[in] {
   transform: translateX(0);
 }
 
-article[outgoing] {
+article[out] {
   transform: translateX(-100%);
 }
 
-article[active] ~ article[outgoing] {
+article[in] ~ article[out] {
   transform: translateX(100%);
 }
