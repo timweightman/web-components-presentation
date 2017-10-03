@@ -1,0 +1,17 @@
+{
+  "name": "web-components-presentation",
+  "version": "1.0.0",
+  "description": "Beginner's guide to Web Components",
+  "main": "index.js",
+  "scripts": {
+    "start": "aliv"
+  },
+  "author": "Tim Weightman",
+  "license": "ISC",
+  "devDependencies": {
+    "aliv": "^1.9.0"
+  },
+  "dependencies": {
+    "reveal.js": "^3.5.0"
+  }
+}

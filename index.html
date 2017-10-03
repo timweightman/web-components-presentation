@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Beginner's guide to Web Components</title>
+    <base href="/" />
+    <link rel="stylesheet" href="theme.css">
+
+    <script type="module" src="components/my-presentation/my-presentation.js"></script>
+  </head>
+  <body>
+    <my-presentation progress>
+      <article slot="slide">
+        <h1>Beginner's guide to <br/>Web Components &#x1f389;</h1>
+      </article>
+
+      <article slot="slide">
+        <h2>I'll cover</h2>
+        <ul>
+          <li>The specifications involved, and what they do.</li>
+          <li>The pros and cons of Web Components today.</li>
+          <li>Creating a simple Web Component.</li>
+        </ul>
+      </article>
+
+      <article slot="slide">
+        <h1>Three</h1>
+      </article>
+    </my-presentation>
+  </body>
+</html>

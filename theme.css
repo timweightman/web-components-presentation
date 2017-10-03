@@ -1,0 +1,57 @@
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 2.5em;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, small, strong, em {
+  text-align: center;
+}
+
+ul > li {
+  text-align: left;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+article > * {
+  display: block;
+  max-width: 960px;
+  transform: translateY(-15vh);
+}
+
+/* Transitions */
+article {
+  transition: 0.7s all cubic-bezier(0.19, 1, 0.22, 1);
+  transform: translateX(100%);
+}
+
+article[active] {
+  transform: translateX(0);
+}
+
+article[outgoing] {
+  transform: translateX(-100%);
+}
+
+article[active] ~ article[outgoing] {
+  transform: translateX(100%);
+}
