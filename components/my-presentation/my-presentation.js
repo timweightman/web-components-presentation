@@ -1,17 +1,61 @@
-const store = new WeakMap();
-const setState = function(instance, state) {
-  const oldState = store.get(instance);
-
-  store.set(instance, {
+const state = new WeakMap();
+const setState = (instance, newState) => {
+  const oldState = state.get(instance);
+  state.set(instance, {
     ...(oldState || {}),
-    ...(state || {}),
+    ...(newState || {}),
   });
 
   instance.render();
 };
 
 class MyPresentation extends HTMLElement {
-  static get is() { return 'my-presentation'; }
+  static get is() {
+    return 'my-presentation';
+  }
+
+  static get observedAttributes() {
+    return ['progress', 'index'];
+  }
+
+  static get template() {
+    return `
+      <style>
+        :host {
+          display: block;
+          width: 100%;
+          height: 100%;
+          min-height: 50px;
+          overflow: hidden;
+          position: relative;
+          outline: none;
+        }
+
+        :host > main slot::slotted(*) {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+        }
+
+        :host > main > #progress {
+          height: 1%;
+          min-height: 2px;
+          overflow: hidden;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          transition: .5s width ease-in-out;
+          background-color: black;
+        }
+      </style>
+      <main>
+        <slot id="slides" name="slide"></slot>
+        <div id="progress"></div>
+      </main>
+    `;
+  }
 
   // LIFECYCLE
   constructor() {
@@ -20,99 +64,87 @@ class MyPresentation extends HTMLElement {
     this.render = this.render.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.loadSlides = this.loadSlides.bind(this);
-
-    setState(this, {
-      slides: [],
-      outgoing: null,
-      incoming: 0,
-    });
   }
 
   connectedCallback() {
     if (!this.shadowRoot) {
       this.attachShadow({ mode: 'open' });
-      this.shadowRoot.innerHTML = `
-        <style>
-          :host {
-            display: block;
-            width: 100%;
-            height: 100%;
-            min-height: 50px;
-            overflow: hidden;
-            position: relative;
-            outline: none;
-          }
-
-          :host > main slot::slotted(*) {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-          }
-
-          :host > main > #progress {
-            height: 1vh;
-            background-color: tomato;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-          }
-        </style>
-        <main>
-          <slot id="slides" name="slide"></slot>
-          <div id="progress"></div>
-        </main>
-      `;
+      this.shadowRoot.innerHTML = MyPresentation.template;
     }
 
-    this.tabIndex = 0;
-    this.focus();
+    const embedded = this.hasAttribute('embedded') || false
 
-    this.render();
+    setState(this, {
+      lastIndex: null,
+      index: this.getAttribute('index') || 0,
+      progress: this.hasAttribute('progress') || false,
+      embedded: embedded,
+    });
 
-    this.addEventListener('keyup', this.handleKeyUp);
+    if (embedded) {
+      this.tabIndex = 0;
+      this.addEventListener('keyup', this.handleKeyUp);
+    } else {
+      this.ownerDocument.addEventListener('keyup', this.handleKeyUp);
+    }
+
     this.shadowRoot.querySelector('#slides').addEventListener('slotchange', this.loadSlides);
   }
 
   disconnectedCallback() {
     this.removeEventListener('keyup', this.handleKeyUp);
+    this.ownerDocument.removeEventListener('keyup', this.handleKeyUp);
     this.shadowRoot.querySelector('#slides').addEventListener('slotchange', this.loadSlides);
   }
 
-  // ATTRIBUTES
-  get progress() {
-    return this.hasAttribute('progress');
-  }
-
-  set progress(value) {
-    if (value === true) {
-      this.setAttribute('progress', '');
-    } else {
-      this.removeAttribute('progress');
+  attributeChangedCallback(attrName, prevValue, nextValue) {
+    if (prevValue !== nextValue) {
+      this[attrName] = nextValue;
     }
   }
 
-  get current() {
-    return this.getAttribute('current');
+  // PROPERTIES
+  get slides() {
+    if (this.shadowRoot) {
+      const slideSlot = this.shadowRoot.querySelector('#slides');
+      if (slideSlot) {
+        return slideSlot.assignedNodes() || [];
+      }
+    }
+    return [];
   }
 
-  set current(value) {
-    this.setAttribute('current', value);
+  get current() {
+    return this.slides[this.index];
+  }
+
+  get index() {
+    return state.get(this).index;
+  }
+
+  set index(value) {
+    const parsedValue = parseInt(value, 10);
+    if (parsedValue >= 0 && parsedValue < this.slides.length) {
+      setState(this, {
+        lastIndex: this.index,
+        index: parsedValue,
+      });
+    }
+  }
+
+  get progress() {
+    return state.get(this).progress;
+  }
+
+  set progress(value) {
+    setState(this, { progress: !!value });
   }
 
   // METHODS
-  loadSlides() {
-    const { slides, outgoing, incoming } = store.get(this);
-
-    const newSlides = this.shadowRoot.querySelector('#slides').assignedNodes();
-    const newIncoming = newSlides.indexOf(slides[incoming]);
-    const newOutgoing = newSlides.indexOf(slides[outgoing]);
-
+  loadSlides(event) {
     setState(this, {
-      slides: newSlides,
-      incoming: newIncoming >= 0 ? newIncoming : 0,
-      outgoing: newOutgoing >= 1 ? newOutgoing - 1 : null,
+      lastIndex: null,
+      index: 0,
     });
   }
 
@@ -125,42 +157,39 @@ class MyPresentation extends HTMLElement {
   }
 
   prev() {
-    const { slides, outgoing, incoming } = store.get(this);
-    if (incoming === 0) { return; }
-
-    setState(this, {
-      incoming: incoming -1,
-      outgoing: incoming,
-    });
+    if (this.index > 0) {
+      this.index = this.index - 1;
+    }
   }
 
   next() {
-    const { slides, outgoing, incoming } = store.get(this);
-    if (incoming === slides.length - 1) { return; }
-
-    setState(this, {
-      incoming: incoming + 1,
-      outgoing: incoming,
-    });
+    if (this.index < this.slides.length - 1) {
+      this.index = this.index + 1;
+    }
   }
 
   render() {
-    const { slides, outgoing, incoming } = store.get(this);
-    if (!this.shadowRoot) { return; }
+    const { lastIndex, index, progress } = state.get(this);
 
-    if (slides[outgoing]) {
-      slides[outgoing].setAttribute('outgoing', '');
-      slides[outgoing].removeAttribute('active');
+    const oldSlide = this.slides[lastIndex];
+    const newSlide = this.slides[index];
+
+    if (oldSlide) {
+      oldSlide.setAttribute('out', '');
+      oldSlide.removeAttribute('in');
     }
 
-    if (slides[incoming]) {
-      slides[incoming].removeAttribute('outgoing');
-      slides[incoming].setAttribute('active', '');
+    if (newSlide) {
+      newSlide.removeAttribute('out');
+      newSlide.setAttribute('in', '');
     }
 
     if (this.progress) {
-      const progressPercent = ((incoming+1) / slides.length) * 100;
-      this.shadowRoot.querySelector('#progress').style = `width: ${progressPercent}%;`
+      const ratio = ((this.index+1) / this.slides.length);
+      this.shadowRoot.querySelector('#progress').style = `
+        width: ${ratio * 100}%;
+        opacity: ${ratio}%;
+      `;
     }
   }
 }
