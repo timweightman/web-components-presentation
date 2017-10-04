@@ -137,7 +137,11 @@ class MyPresentation extends HTMLElement {
   }
 
   set progress(value) {
-    setState(this, { progress: !!value });
+    if (value === null || value === undefined || value === false || value === 0) {
+      setState(this, { progress: false });
+    } else {
+      setState(this, { progress: true });
+    }
   }
 
   // METHODS
@@ -184,12 +188,13 @@ class MyPresentation extends HTMLElement {
       newSlide.setAttribute('in', '');
     }
 
-    if (this.progress) {
-      const ratio = ((this.index+1) / this.slides.length);
-      this.shadowRoot.querySelector('#progress').style = `
-        width: ${ratio * 100}%;
-        opacity: ${ratio}%;
-      `;
+    if (this.shadowRoot) {
+      if (this.progress) {
+        const ratio = ((this.index+1) / this.slides.length);
+        this.shadowRoot.querySelector('#progress').style = `width: ${ratio * 100}%;`;
+      } else {
+        this.shadowRoot.querySelector('#progress').style = `display: none;`
+      }
     }
   }
 }
