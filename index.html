@@ -10,20 +10,74 @@
   <body>
     <my-presentation progress>
       <article slot="slide">
-        <h1>Beginner's guide to <br/>Web Components &#x1f389;</h1>
+        <h1>Beginner's guide to <br/>Web Components &#x1F393;</h1>
       </article>
 
       <article slot="slide">
         <h2>I'll cover</h2>
-        <ul>
+        <ol>
           <li>The specifications involved, and what they do.</li>
           <li>The pros and cons of Web Components today.</li>
           <li>Creating a simple Web Component.</li>
+          <li>Question time +/- libraries &amp; frameworks.</li>
+        </ol>
+      </article>
+
+      <article slot="slide" class="highlight">
+        <h2>It's<br>Four<br>separate<br>things</h2>
+      </article>
+
+      <article slot="slide">
+        <h1>1. HTML Imports &#x1F914;</h1>
+        <code>&lt;link rel="import" href="foo.html"&gt;</code>
+      </article>
+
+      <article slot="slide">
+        <h1>2. HTML Templates &#x1F44D;</h1>
+        <code>&lt;template id="button-template"&gt;
+  &lt;button&gt;inert markup, to consume later.&lt;/button&gt;
+&lt;/template&gt;</code>
+      </article>
+
+      <article slot="slide">
+        <h1>3. Custom Elements &#x1F44D;</h1>
+        <code>&lt;foo-element bar="baz"&gt;
+  Foo content
+&lt;/foo-element&gt;</code>
+      </article>
+
+      <article slot="slide">
+        <h1>4. Shadow DOM &#x1F605;</h1>
+        <code>const el = document.querySelector('#element');
+if (el &amp;&amp; !el.shadowRoot) {
+  el.attachShadow({ mode: 'open' });
+  el.shadowRoot.innerHTML = 'Encapsulated stuff!';
+}</code>
+      </article>
+
+      <article slot="slide" class="pros-cons">
+        <ul>
+          <li>Natively supported</li>
+          <li>Truly encapsulated</li>
+          <li>Framework-agnostic<sup>*</sup></li>
+        </ul>
+        <ul>
+          <li>Polyfills <sup>(<a href="http://webcomponents.org" target="_wc">chart</a>)</sup></li>
+          <li><h2>HEAPS to learn</h2></li>
         </ul>
       </article>
 
       <article slot="slide">
-        <h1>Three</h1>
+        <h2>What libraries exist?</h2>
+        <a href="https://github.com/Polymer/polymer/wiki/Who%27s-using-Polymer%3F" target="_polymer">Polymer (Google)</a>
+        <a href="https://stenciljs.com/" target="_stencil">Stencil (Ionic)</a>
+        <a href="https://github.com/skatejs/skatejs" target="_skate">Skate (Github @treshugart)</a>
+        <a href="https://github.com/PolymerLabs/lit-html" target="_lit">lit-html (Google)</a>
+        ... and others
+      </article>
+
+      <article slot="slide">
+        <h1>Code &#x1f389;</h1>
       </article>
     </my-presentation>
   </body>
