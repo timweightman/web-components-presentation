@@ -36,6 +36,10 @@ code {
   white-space: pre;
 }
 
+a, a:visited {
+  color: black;
+}
+
 article {
   display: flex;
   flex-direction: column;
@@ -56,6 +60,11 @@ article.highlight {
   background-color: #5f00a8;
   text-transform: uppercase;
   color: white;
+}
+article.highlight a,
+article.highlight a:visited {
+  color: white;
+  text-decoration: underline;
 }
 
 article > * {
