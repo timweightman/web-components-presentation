@@ -72,13 +72,15 @@ class MyPresentation extends HTMLElement {
       this.shadowRoot.innerHTML = MyPresentation.template;
     }
 
-    const embedded = this.hasAttribute('embedded') || false
+    const index = parseInt(this.getAttribute('index'), 10) || 0;
+    const progress = this.hasAttribute('progress') || false;
+    const embedded = this.hasAttribute('embedded') || false;
 
     setState(this, {
       lastIndex: null,
-      index: this.getAttribute('index') || 0,
-      progress: this.hasAttribute('progress') || false,
-      embedded: embedded,
+      index,
+      progress,
+      embedded,
     });
 
     if (embedded) {
@@ -124,7 +126,7 @@ class MyPresentation extends HTMLElement {
 
   set index(value) {
     const parsedValue = parseInt(value, 10);
-    if (parsedValue >= 0 && parsedValue < this.slides.length) {
+    if (parsedValue >= 0 && this.slides.length) {
       setState(this, {
         lastIndex: this.index,
         index: parsedValue,
@@ -146,10 +148,8 @@ class MyPresentation extends HTMLElement {
 
   // METHODS
   loadSlides(event) {
-    setState(this, {
-      lastIndex: null,
-      index: 0,
-    });
+    this.slides.forEach(slide => slide.setAttribute('out', ''));
+    this.render();
   }
 
   handleKeyUp(event) {

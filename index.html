@@ -3,8 +3,16 @@
   <head>
     <title>Beginner's guide to Web Components</title>
     <base href="/" />
-    <link rel="stylesheet" href="theme.css">
 
+    <!-- Syntax highlighting -->
+    <!-- <link rel="stylesheet"
+    href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- Presentation theme -->
+    <link rel="stylesheet" href="theme.css">
     <script type="module" src="components/my-presentation/my-presentation.js"></script>
   </head>
   <body>
@@ -24,35 +32,35 @@
       </article>
 
       <article slot="slide" class="highlight">
-        <h2>It's<br>Four<br>separate<br>things</h2>
+        <h1>It's<br>Four<br>separate<br>things</h1>
       </article>
 
       <article slot="slide">
-        <h1>1. HTML Imports &#x1F914;</h1>
-        <code>&lt;link rel="import" href="foo.html"&gt;</code>
+        <h2>1. HTML Imports &#x1F914;</h2>
+        <pre><code>&lt;link rel="import" href="foo.html"&gt;</pre></code>
       </article>
 
       <article slot="slide">
-        <h1>2. HTML Templates &#x1F44D;</h1>
-        <code>&lt;template id="button-template"&gt;
+        <h2>2. HTML Templates &#x1F44D;</h2>
+        <pre><code>&lt;template id="button-template"&gt;
   &lt;button&gt;inert markup, to consume later.&lt;/button&gt;
-&lt;/template&gt;</code>
+&lt;/template&gt;</pre></code>
       </article>
 
       <article slot="slide">
-        <h1>3. Custom Elements &#x1F44D;</h1>
-        <code>&lt;foo-element bar="baz"&gt;
+        <h2>3. Custom Elements &#x1F44D;</h2>
+        <pre><code>&lt;foo-element bar="baz"&gt;
   Foo content
-&lt;/foo-element&gt;</code>
+&lt;/foo-element&gt;</pre></code>
       </article>
 
       <article slot="slide">
-        <h1>4. Shadow DOM &#x1F605;</h1>
-        <code>const el = document.querySelector('#element');
+        <h2>4. Shadow DOM &#x1F605;</h2>
+        <pre><code>const el = document.createElement('div');
 if (el &amp;&amp; !el.shadowRoot) {
   el.attachShadow({ mode: 'open' });
   el.shadowRoot.innerHTML = 'Encapsulated stuff!';
-}</code>
+}</pre></code>
       </article>
 
       <article slot="slide" class="pros-cons">
@@ -63,17 +71,30 @@ if (el &amp;&amp; !el.shadowRoot) {
         </ul>
         <ul>
           <li>Polyfills <sup>(<a href="http://webcomponents.org" target="_wc">chart</a>)</sup></li>
-          <li><h2>HEAPS to learn</h2></li>
+          <li><h3>HEAPS to learn</h3></li>
         </ul>
       </article>
 
       <article slot="slide">
         <h2>What libraries exist?</h2>
-        <a href="https://github.com/Polymer/polymer/wiki/Who%27s-using-Polymer%3F" target="_polymer">Polymer (Google)</a>
-        <a href="https://stenciljs.com/" target="_stencil">Stencil (Ionic)</a>
-        <a href="https://github.com/skatejs/skatejs" target="_skate">Skate (Github @treshugart)</a>
-        <a href="https://github.com/PolymerLabs/lit-html" target="_lit">lit-html (Google)</a>
-        ... and others
+        <ul>
+          <li>
+            <a href="https://github.com/Polymer/polymer/wiki/Who%27s-using-Polymer%3F" target="_polymer">Polymer</a>
+            <small>(Google)</small>
+          </li>
+          <li>
+            <a href="https://stenciljs.com/" target="_stencil">Stencil</a>
+            <small>(Ionic)</small>
+          </li>
+          <li>
+            <a href="https://github.com/skatejs/skatejs" target="_skate">Skate</a>
+            <small>(Github @treshugart)</small>
+          </li>
+          <li>
+            <a href="https://github.com/PolymerLabs/lit-html" target="_lit">lit-html</a>
+            <small>(Google)</small>
+          </li>
+        </ul>
       </article>
 
       <article slot="slide">
