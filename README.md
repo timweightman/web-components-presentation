@@ -91,6 +91,7 @@ name | attribute | property | type | description
 ---- | --------- | -------- | ---- | -----------
 index | &#x2714; | &#x2714; `get`<br/>&#x2714; `set` | `number` | The index of the current slide.
 progress | &#x2714; | &#x2714; `get`<br/>&#x2714; `set` | `boolean` | If `true`, will show a progress bar at the bottom of the presentation.
+controls | &#x2714; | &#x2714; `get`<br/>&#x2714; `set` | `boolean` | If `true`, will show clickable arrow controls to go to previous / next slide.
 slides |  | &#x2714; `get` | `array[Element]` | An array of all slides Elements that are included in the presentation.
 current | | &#x2714; `get` | `Element` | The current slide Element being shown.
 embedded | &#x2714; | | `boolean` | Only used during initial upgrade when `<my-presentation>` is connected to the document. If `true`, will attach event listeners directly onto the element, and make `<my-presentation>` focusable. If `false`, event handlers are added to `ownerDocument`.

@@ -15,7 +15,7 @@ class MyPresentation extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['progress', 'index'];
+    return ['progress', 'controls', 'index'];
   }
 
   static get template() {
@@ -39,7 +39,13 @@ class MyPresentation extends HTMLElement {
           left: 0;
         }
 
-        :host > main > #progress {
+        :host > main > #progress,
+        :host > main > .controls {
+          display: none;
+        }
+
+        :host([progress]) > main > #progress {
+          display: block;
           height: 1%;
           min-height: 2px;
           overflow: hidden;
@@ -49,10 +55,41 @@ class MyPresentation extends HTMLElement {
           transition: .5s width ease-in-out;
           background-color: black;
         }
+
+        :host([controls]) > main > .controls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 20%;
+        }
+        :host([controls]) > main > .controls .prev,
+        :host([controls]) > main > .controls .next {
+          height: 15rem;
+          width: 15rem;
+          background: transparent;
+          border: 0;
+          font-size: 10rem;
+          opacity: 0.05;
+          outline: none;
+          transition: opacity 0.15s ease-in-out;
+        }
+        :host([controls]) > main > .controls .prev {
+          left: 20%;
+        }
+        :host([controls]) > main > .controls .next {
+          right: 20%;
+        }
       </style>
       <main>
-        <slot id="slides" name="slide"></slot>
-        <div id="progress"></div>
+      <slot id="slides" name="slide"></slot>
+      <div id="progress"></div>
+      <div class="controls">
+        <button class="prev">&lt;</button>
+        <button class="next">&gt;</button>
+      </div>
       </main>
     `;
   }
@@ -63,6 +100,8 @@ class MyPresentation extends HTMLElement {
 
     this.render = this.render.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.prev = this.prev.bind(this);
+    this.next = this.next.bind(this);
     this.loadSlides = this.loadSlides.bind(this);
   }
 
@@ -74,12 +113,14 @@ class MyPresentation extends HTMLElement {
 
     const index = parseInt(this.getAttribute('index'), 10) || 0;
     const progress = this.hasAttribute('progress') || false;
+    const controls = this.hasAttribute('controls') || false;
     const embedded = this.hasAttribute('embedded') || false;
 
     setState(this, {
       lastIndex: null,
       index,
       progress,
+      controls,
       embedded,
     });
 
@@ -90,13 +131,17 @@ class MyPresentation extends HTMLElement {
       this.ownerDocument.addEventListener('keyup', this.handleKeyUp);
     }
 
+    this.shadowRoot.querySelector('.prev').addEventListener('click', this.prev);
+    this.shadowRoot.querySelector('.next').addEventListener('click', this.next);
     this.shadowRoot.querySelector('#slides').addEventListener('slotchange', this.loadSlides);
   }
 
   disconnectedCallback() {
     this.removeEventListener('keyup', this.handleKeyUp);
     this.ownerDocument.removeEventListener('keyup', this.handleKeyUp);
-    this.shadowRoot.querySelector('#slides').addEventListener('slotchange', this.loadSlides);
+    this.shadowRoot.querySelector('.prev').removeEventListener('click', this.prev);
+    this.shadowRoot.querySelector('.next').removeEventListener('click', this.next);
+    this.shadowRoot.querySelector('#slides').removeEventListener('slotchange', this.loadSlides);
   }
 
   attributeChangedCallback(attrName, prevValue, nextValue) {
@@ -146,6 +191,18 @@ class MyPresentation extends HTMLElement {
     }
   }
 
+  get controls() {
+    return state.get(this).controls;
+  }
+
+  set controls(value) {
+    if (value === null || value === undefined || value === false || value === 0) {
+      setState(this, { controls: false });
+    } else {
+      setState(this, { controls: true });
+    }
+  }
+
   // METHODS
   loadSlides(event) {
     this.slides.forEach(slide => slide.setAttribute('out', ''));
@@ -160,13 +217,21 @@ class MyPresentation extends HTMLElement {
     }
   }
 
+  highlightControl(control) {
+    const originalOpacity = '0.05';
+    control.style.opacity = '0.25';
+    setTimeout(() => control.style.opacity = originalOpacity, 200);
+  }
+
   prev() {
+    this.highlightControl(this.shadowRoot.querySelector('.prev'));
     if (this.index > 0) {
       this.index = this.index - 1;
     }
   }
 
   next() {
+    this.highlightControl(this.shadowRoot.querySelector('.next'));
     if (this.index < this.slides.length - 1) {
       this.index = this.index + 1;
     }
