@@ -23,37 +23,39 @@
         <h2>I'll cover</h2>
         <ol>
           <li>The specifications involved, and what they do.</li>
-          <li>The pros and cons of Web Components today.</li>
+          <li>A couple of pros and cons of Web Components today.</li>
           <li>Creating a simple Web Component.</li>
           <li>Question time +/- libraries &amp; frameworks.</li>
         </ol>
       </article>
 
       <article slot="slide" class="highlight">
-        <h1>It's<br>Four<br>separate<br>things</h1>
+        <h1>It's<br>three<br>separate<br>things</h1>
       </article>
 
       <article slot="slide">
-        <h2>1. HTML Imports &#x1F914;</h2>
-        <pre><code>&lt;link rel="import" href="foo.html"&gt;</pre></code>
-      </article>
-
-      <article slot="slide">
-        <h2>2. HTML Templates &#x1F44D;</h2>
+        <h2>1. HTML Templates &#x1F44D;</h2>
         <pre><code>&lt;template id="button-template"&gt;
   &lt;button&gt;inert markup, to consume later.&lt;/button&gt;
 &lt;/template&gt;</pre></code>
       </article>
 
       <article slot="slide">
-        <h2>3. Custom Elements &#x1F44D;</h2>
+        <h2>2. Custom Elements &#x1F44D;</h2>
         <pre><code>&lt;foo-element bar="baz"&gt;
   Foo content
-&lt;/foo-element&gt;</pre></code>
+&lt;/foo-element&gt;
+</pre></code>
+<pre><code>
+class FooElement extends HTMLElement {
+  /* implementation */
+}
+
+customElements.define("foo-element", FooElement);</pre></code>
       </article>
 
       <article slot="slide">
-        <h2>4. Shadow DOM &#x1F605;</h2>
+        <h2>3. Shadow DOM &#x1F605;</h2>
         <pre><code>const el = document.createElement('div');
 if (el &amp;&amp; !el.shadowRoot) {
   el.attachShadow({ mode: 'open' });
@@ -65,7 +67,7 @@ if (el &amp;&amp; !el.shadowRoot) {
         <ul>
           <li>Natively supported</li>
           <li>Truly encapsulated</li>
-          <li>Framework-agnostic<sup>*</sup></li>
+          <li>Framework-agnostic<a href="https://custom-elements-everywhere.com/"><sup>*</sup></a></li>
         </ul>
         <ul>
           <li>Polyfills <sup>(<a href="http://webcomponents.org" target="_wc">chart</a>)</sup></li>
@@ -77,7 +79,7 @@ if (el &amp;&amp; !el.shadowRoot) {
         <h2>What libraries exist?</h2>
         <ul>
           <li>
-            <a href="https://github.com/Polymer/polymer/wiki/Who%27s-using-Polymer%3F" target="_polymer">Polymer</a>
+            <a href="https://lit-element.polymer-project.org/" target="_lit">LitElement</a>
             <small>(Google)</small>
           </li>
           <li>
@@ -85,18 +87,10 @@ if (el &amp;&amp; !el.shadowRoot) {
             <small>(Ionic)</small>
           </li>
           <li>
-            <a href="https://github.com/skatejs/skatejs" target="_skate">Skate</a>
-            <small>(Github @treshugart)</small>
-          </li>
-          <li>
-            <a href="https://github.com/PolymerLabs/lit-html" target="_lit">lit-html</a>
-            <small>(Google)</small>
+            <a href="https://skatejs.netlify.com/" target="_skate">Skate</a>
+            <small>(@treshugart on GitHub)</small>
           </li>
         </ul>
-      </article>
-
-      <article slot="slide">
-        <h1>Code &#x1f389;</h1>
       </article>
     </my-presentation>
   </body>

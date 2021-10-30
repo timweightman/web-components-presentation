@@ -53,7 +53,7 @@ class MyPresentation extends HTMLElement {
           bottom: 0;
           left: 0;
           transition: .5s width ease-in-out;
-          background-color: black;
+          background-color: blueviolet;
         }
 
         :host([controls]) > main > .controls {

@@ -88,6 +88,10 @@ article > * {
   max-width: 960px;
 }
 
+article .strike {
+  text-decoration: line-through;
+}
+
 /* Transitions */
 article {
   transition:
